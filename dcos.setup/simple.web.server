@@ -1,0 +1,21 @@
+{
+  "id": "/jars",
+  "cmd": "cd /d5/apps/jobs && /opt/mesosphere/bin/python3 -m http.server $PORT0",
+  "cpus": 1,
+  "mem": 128,
+  "disk": 0,
+  "instances": 1,
+  "portDefinitions": [
+    {
+      "protocol": "tcp",
+      "port": 80,
+      "labels": {
+        "VIP_0": "/jars:80"
+      },
+      "name": "jars"
+    }
+  ],
+  "acceptedResourceRoles": [
+  "slave_public"
+  ]
+}
