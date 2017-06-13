@@ -22,9 +22,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
         <!-- Data Cluster 2.6.0-cdh5.9.0-->
-        <hadoop.version>2.7.0-mapr-1602</hadoop.version>
-        <mapr.core.version>5.1.0.37817-mapr</mapr.core.version>
-        <spark.version>1.6.1</spark.version>
+        <!--<hadoop.version>2.7.0-mapr-1602</hadoop.version>-->
+        <!--<mapr.core.version>5.1.0.37817-mapr</mapr.core.version>-->
+        <hadoop.version>2.6.0-cdh5.9.0</hadoop.version>
+        <spark.version>2.0.1</spark.version>
         <spark.csv.version>1.5.0</spark.csv.version>
 
         <!-- DB drivers-->
@@ -501,6 +502,11 @@
             <groupId>com.github.davidmoten</groupId>
             <artifactId>geo</artifactId>
             <version>${geo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>${opencsv.version}</version>
         </dependency>
     </dependencies>
 

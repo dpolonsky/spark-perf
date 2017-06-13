@@ -2,13 +2,19 @@ package com.d5.jobs;
 
 import com.d5.jobs.common.Config;
 import com.d5.jobs.common.ConfigProvider;
+import com.d5.jobs.common.HdfsHelper;
 import com.d5.jobs.functions.BatchJobMapper;
+import com.d5.jobs.functions.CSVMapper;
 import com.eaio.uuid.UUID;
 import org.apache.commons.cli.*;
+import org.apache.hadoop.fs.Path;
+import org.apache.log4j.MDC;
+import org.apache.spark.api.java.function.FlatMapFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.log4j.MDC;
+
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -19,25 +25,30 @@ import java.util.stream.IntStream;
  * Batch job 1:
  * constraints on es write, CPU
  */
-public class BatchJob1 extends AbstractBaseSparkApplication {
-    private static final Logger log = LoggerFactory.getLogger(BatchJob1.class);
+public class BatchJobHDFS extends AbstractBaseSparkApplication {
+    private static final Logger log = LoggerFactory.getLogger(BatchJobHDFS.class);
 
-    BatchJob1(Config config) throws Exception {
+    BatchJobHDFS(Config config) throws Exception {
         super(config);
     }
 
     public static void main(String[] args) throws Throwable {
-        new BatchJob1(ConfigProvider.get()).start(args);
+        new BatchJobHDFS(ConfigProvider.get()).start(args);
     }
 
     private void start(String[] args) throws Throwable {
         long start = System.currentTimeMillis();
         try {
-            int numOfItems = config.getValue().getInt("batch.job1.task.items");
-            List<String> listOfItemIds = IntStream.range(1, numOfItems).mapToObj(i -> new UUID().toString()).collect(Collectors.toList());
-            log.info("Processing {} of , with {} partitions, running mapper...", numOfItems, parallelism);
-            sc.parallelize(listOfItemIds).repartition(parallelism).map(new BatchJobMapper(config, "job1")).collect();
-            log.info("And we are done !");
+            String inputPath = getInput(args);
+            String fsName = config.getValue().getString("fs.default.name");
+            log.info("Got this inputPath:" + inputPath + " abd fsname:" + fsName);
+//            Path fullPath = new Path(fsName, inputPath);
+//            log.info("Got this input:" + fullPath.toString());
+            List<Integer> lines = sc.textFile(inputPath).mapPartitions(new CSVMapper(config, "jobHDFS")).collect();
+            int totalNumOfLines = lines.stream().mapToInt(Integer::intValue).sum();
+            log.info("Processed {}, and we are done !", totalNumOfLines);
+        } catch (ParseException e) {
+            log.error("Failed to parse input arguments", e);
         } catch (Exception e) {
             log.error("Failed to process", e);
         } finally {
@@ -66,10 +77,9 @@ public class BatchJob1 extends AbstractBaseSparkApplication {
         return cmd.getOptionValue("input");
     }
 
-
     @Override
     protected String getApplicationName() {
-        return "job1dcos";
+        return "jobhdfs";
     }
 
     @Override

@@ -34,13 +34,12 @@ public class BatchJob3 extends AbstractBaseSparkApplication {
     private void start(String[] args) throws Throwable {
         long start = System.currentTimeMillis();
         try {
-            List<String> listOfItemIds = fetchItemIds("PERSON_TYPE");
-            log.info("Fetched {} persons , running mapper...", listOfItemIds.size());
+            int numOfItems = config.getValue().getInt("batch.job3.task.items");
+            List<String> listOfItemIds = IntStream.range(1, numOfItems).mapToObj(i -> new UUID().toString()).collect(Collectors.toList());
+            log.info("Processing {} of , with {} partitions, running mapper...", numOfItems, parallelism);
 
             sc.parallelize(listOfItemIds).repartition(parallelism).map(new BatchJobMapper(config, "job3")).collect();
             log.info("And we are done !");
-        } catch (ParseException e) {
-            log.error("Failed to parse input arguments", e);
         } catch (Exception e) {
             log.error("Failed to process", e);
         } finally {
@@ -56,26 +55,9 @@ public class BatchJob3 extends AbstractBaseSparkApplication {
         }
     }
 
-    private String getInputType(String[] args) throws ParseException {
-        Options options = new Options();
-
-        final Option optionInput = new Option("t", "type", true, "type");
-        optionInput.setRequired(true);
-        options.addOption(optionInput);
-
-        CommandLineParser parser = new BasicParser();
-        CommandLine cmd = parser.parse(options, args, true);
-
-        return cmd.getOptionValue("type");
-    }
-
-    private List<String> fetchItemIds(String type) throws Exception {
-        return IntStream.range(1, 10000).mapToObj(i -> new UUID().toString()).collect(Collectors.toList());
-    }
-
     @Override
     protected String getApplicationName() {
-        return "sandbox";
+        return "job3dcos";
     }
 
     @Override

@@ -44,6 +44,20 @@ function deploy_mapr(){
 }
 
 function deploy_dcos(){
+    mvn_build
+    ssh_cmd "core" "35.156.121.150" "rm -rf /d5/apps/jobs/*"
+    scp_file_dcos "jobs/target/jobs-tar-archive.tar" "core" "35.156.121.150" "/d5/apps/jobs/jobs-tar-archive.tar"
+    scp_file_dcos "jobs/target/jobs-v1.0.jar" "core" "35.156.121.150" "/d5/apps/jobs/jobs.jar"
+    ssh_cmd "core" "35.156.121.150" "cd /d5/apps/jobs/ && tar -xvf jobs-tar-archive.tar;"
+
+    log "ssh core@35.156.121.150 \"ssh -i ~/.ssh/mesops_frankfurt.pem 10.0.6.247 \"sudo rm -rf /d5/apps/jobs\"\""
+    ssh core@35.156.121.150 "ssh -i ~/.ssh/mesops_frankfurt.pem 10.0.6.247 \"sudo rm -rf /d5/apps/jobs/*\""
+
+    log "ssh core@35.156.121.150 \"scp -i ~/.ssh/mesops_frankfurt.pem -r /d5/apps/jobs/* 10.0.6.247:/d5/apps/jobs/\""
+    ssh core@35.156.121.150 "scp -i ~/.ssh/mesops_frankfurt.pem -r /d5/apps/jobs/* 10.0.6.247:/d5/apps/jobs/"
+}
+
+function deploy_dcos_1(){
 #    mvn_build
     exec "rm -rf /tmp/tmp_lib; mkdir -p /tmp/tmp_lib;cp ${BASEDIR}/jobs/target/jobs*.tar /tmp/tmp_lib;cd /tmp/tmp_lib;tar -xvf jobs-tar-archive.tar;"
     EXEC_JARS=$(cd  /tmp/; ls /tmp/tmp_lib/lib/ | awk -v prefix="hdfs:\\\/\\\/\\\/d5\\\/apps\\\/jobs\\\/lib\\\/" '{print prefix $1}' | paste -sd ',' -)

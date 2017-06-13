@@ -1,0 +1,54 @@
+{
+  "description": "jobhdfs",
+  "id": "jobhdfs",
+  "run": {
+    "cpus": 1,
+    "mem": 1024,
+    "disk": 0,
+    "user": "root",
+    "cmd": "/opt/spark/dist/bin/spark-submit --name ${SPARK_NAME} --master ${SPARK_MASTER} --conf spark.driver.cores=${SPARK_DRIVER_CORES} --conf spark.driver.memory=${SPARK_DRIVER_MEM} --conf spark.cores.max=${SPARK_CORES_MAX} --conf spark.executor.home=${SPARK_EXECUTOR_HOME} --conf spark.mesos.executor.docker.image=${SPARK_DOCKER_IMAGE} --conf spark.eventLog.enabled=${SPARK_EVENT_LOG_ENABLED} --conf spark.eventLog.dir=${SPARK_EVENT_LOG_DIR} --conf spark.mesos.uris=${SPARK_URIS} --conf spark.driver.extraClassPath=${SPARK_DRIVER_EXTRA_PASS} --conf spark.executor.extraClassPath=${SPARK_EXECUTOR_EXTRA_PASS} --class ${SPARK_CLASS} --conf \"spark.driver.extraJavaOptions=${SPARK_DRIVER_JOPTS}\" --conf \"spark.executor.extraJavaOptions=${SPARK_EXECUTOR_JOPTS}\" --jars ${SPARK_JARS} ${MESOS_SANDBOX}/${SPARK_JAR} ${SPARK_ARGS}",
+    "env": {
+      "SPARK_NAME": "jobhdfs",
+      "SPARK_DOCKER_IMAGE": "mesosphere/spark:1.0.6-2.0.2-hadoop-2.6",
+      "SPARK_MASTER": "mesos://zk://zk-1.zk:2181,zk-2.zk:2181,zk-3.zk:2181,zk-4.zk:2181,zk-5.zk:2181/mesos",
+      "SPARK_CORES_MAX": "6",
+      "SPARK_DRIVER_CORES": "1",
+      "SPARK_DRIVER_MEM": "2g",
+      "SPARK_EXECUTOR_CORES": "2",
+      "SPARK_EXECUTOR_MEM": "2g",
+      "SPARK_EXECUTOR_HOME": "/opt/spark/dist",
+      "SPARK_EVENT_LOG_ENABLED": "true",
+      "SPARK_EVENT_LOG_DIR": "hdfs://hdfs/history",
+      "SPARK_URIS": "http://api.hdfs.marathon.l4lb.thisdcos.directory/v1/endpoints/hdfs-site.xml,http://api.hdfs.marathon.l4lb.thisdcos.directory/v1/endpoints/core-site.xml,http://jars.marathon.l4lb.thisdcos.directory:80/log4j.properties,http://jars.marathon.l4lb.thisdcos.directory:80/lib/HdrHistogram-2.1.6.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/common-v1.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/commons-cli-1.3.1.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/commons-lang-2.6.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/compress-lzf-1.0.3.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/config-1.3.1.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/elasticsearch-2.3.1.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/geo-0.7.4.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/grumpy-core-0.2.2.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/guava-19.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/hppc-0.7.1.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/jackson-core-2.6.2.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/jackson-dataformat-cbor-2.6.2.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/jackson-dataformat-smile-2.6.2.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/jackson-dataformat-yaml-2.6.2.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/java-statsd-client-3.0.1.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/joda-convert-1.2.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/joda-time-2.9.1.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/json-smart-1.1.1.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/jsonevent-layout-1.7.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/jsr166e-1.1.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/log4j-1.2.17.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lombok-1.16.4.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-analyzers-common-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-backward-codecs-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-core-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-grouping-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-highlighter-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-join-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-memory-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-misc-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-queries-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-queryparser-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-sandbox-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-spatial-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-spatial3d-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/lucene-suggest-5.5.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/netty-3.10.5.Final.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/securesm-1.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/slf4j-api-1.7.12.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/slf4j-log4j12-1.7.12.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/snakeyaml-1.15.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/opencsv-3.9.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/spatial4j-0.5.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/t-digest-3.0.jar,http://jars.marathon.l4lb.thisdcos.directory:80/lib/uuid-3.2.jar,http://jars.marathon.l4lb.thisdcos.directory:80/jobs.jar",
+      "SPARK_CLASS": "com.d5.jobs.BatchJobHDFS",
+      "SPARK_JARS": "lib/HdrHistogram-2.1.6.jar,lib/common-v1.0.jar,lib/commons-cli-1.3.1.jar,lib/commons-lang-2.6.jar,lib/compress-lzf-1.0.3.jar,lib/config-1.3.1.jar,lib/elasticsearch-2.3.1.jar,lib/geo-0.7.4.jar,lib/grumpy-core-0.2.2.jar,lib/guava-19.0.jar,lib/hppc-0.7.1.jar,lib/jackson-core-2.6.2.jar,lib/jackson-dataformat-cbor-2.6.2.jar,lib/jackson-dataformat-smile-2.6.2.jar,lib/jackson-dataformat-yaml-2.6.2.jar,lib/java-statsd-client-3.0.1.jar,lib/joda-convert-1.2.jar,lib/joda-time-2.9.1.jar,lib/json-smart-1.1.1.jar,lib/jsonevent-layout-1.7.jar,lib/jsr166e-1.1.0.jar,lib/log4j-1.2.17.jar,lib/lombok-1.16.4.jar,lib/lucene-analyzers-common-5.5.0.jar,lib/lucene-backward-codecs-5.5.0.jar,lib/lucene-core-5.5.0.jar,lib/lucene-grouping-5.5.0.jar,lib/lucene-highlighter-5.5.0.jar,lib/lucene-join-5.5.0.jar,lib/lucene-memory-5.5.0.jar,lib/lucene-misc-5.5.0.jar,lib/lucene-queries-5.5.0.jar,lib/lucene-queryparser-5.5.0.jar,lib/lucene-sandbox-5.5.0.jar,lib/lucene-spatial-5.5.0.jar,lib/lucene-spatial3d-5.5.0.jar,lib/lucene-suggest-5.5.0.jar,lib/netty-3.10.5.Final.jar,lib/securesm-1.0.jar,lib/slf4j-api-1.7.12.jar,lib/slf4j-log4j12-1.7.12.jar,lib/snakeyaml-1.15.jar,lib/opencsv-3.9.jar,lib/spatial4j-0.5.jar,lib/t-digest-3.0.jar,lib/uuid-3.2.jar",
+      "SPARK_JAR": "jobs.jar",
+      "SPARK_DRIVER_EXTRA_PASS" : "lib/jsonevent-layout-1.7.jar:lib/json-smart-1.1.1.jar",
+      "SPARK_EXECUTOR_EXTRA_PASS": "lib/jsonevent-layout-1.7.jar:lib/json-smart-1.1.1.jar",
+      "SPARK_DRIVER_JOPTS": "-Dlog4j.configuration=file:log4j.properties",
+      "SPARK_EXECUTOR_JOPTS": "-Dlog4j.configuration=file:log4j.properties",
+      "SPARK_ARGS": "-i hdfs://hdfs/d5/tmp/input/pc.a.csv"
+    },
+    "docker": {
+      "image": "mesosphere/spark:1.0.6-2.0.2-hadoop-2.6"
+    },
+    "artifacts": [
+      {"uri": "http://api.hdfs.marathon.l4lb.thisdcos.directory/v1/endpoints/core-site.xml", "extract": false, "executable": false, "cache": false},
+      {"uri": "http://api.hdfs.marathon.l4lb.thisdcos.directory/v1/endpoints/hdfs-site.xml", "extract": false, "executable": false, "cache": false},
+      {"uri": "http://jars.marathon.l4lb.thisdcos.directory:80/log4j.properties","extract": false, "executable": false, "cache": false},
+      {"uri": "http://jars.marathon.l4lb.thisdcos.directory:80/jobs.jar","extract": false, "executable": false, "cache": false},
+      {"uri": "http://jars.marathon.l4lb.thisdcos.directory:80/jobs-tar-archive.tar","extract": true, "executable": false, "cache": false}
+    ]
+  },
+  "schedules": [
+    {
+      "id": "default",
+      "enabled": true,
+      "cron": "*/10 * * * *"
+    }
+  ],
+  "labels": {
+    "location": "aws",
+    "owner": "zeus"
+  }
+}
