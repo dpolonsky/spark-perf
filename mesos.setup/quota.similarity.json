@@ -1,0 +1,15 @@
+{
+  "role": "similarity",
+  "guarantee": [
+    {
+      "name": "cpus",
+      "type": "SCALAR",
+      "scalar": { "value": 3 }
+    },
+    {
+      "name": "mem",
+      "type": "SCALAR",
+      "scalar": { "value": 1072 }
+    }
+  ]
+}

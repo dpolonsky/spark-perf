@@ -2,6 +2,11 @@
 ENV=$1
 ACTION=$2
 
+#MAPR_USER="ec2-user"
+#MAPR_HOST="52.58.242.152"
+MAPR_USER="administrator"
+MAPR_HOST="mapr1"
+
 BASEDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 log() {
@@ -33,14 +38,16 @@ exec(){
     log "$@"
     eval $@
 }
+
 function deploy_mapr(){
     mvn_build
-    ssh_cmd "administrator" "mapr1" "mkdir -p /home/administrator/apps/jobs/recent/"
-    scp_file_to_server "jobs/target/jobs*" "administrator" "mapr1" "/home/administrator/apps/jobs/recent/"
-    scp_file_to_server "env.properties" "administrator" "mapr1" "/home/administrator/apps/jobs/recent/"
-    scp_file_to_server "jobs/resources/*.sh" "administrator" "mapr1" "/home/administrator/apps/jobs/recent/"
-    ssh_cmd "administrator" "mapr1" "cd /home/administrator/apps/jobs/recent/;mv jobs-v1.0.jar jobs.jar;tar -xvf jobs-tar-archive.tar"
-    ssh_cmd "administrator" "mapr1" "hadoop fs -mkdir -p /d5/apps/jobs; hadoop fs -rm -r -f -skipTrash /d5/apps/jobs/*;hadoop fs -put ~/apps/jobs/recent /d5/apps/jobs"
+    REMOTE_DIR="/d5/apps/jobs/"
+    ssh_cmd "${MAPR_USER}" "${MAPR_HOST}" "mkdir -p ${REMOTE_DIR}"
+    scp_file_to_server "jobs/target/jobs*" "${MAPR_USER}" "${MAPR_HOST}" "${REMOTE_DIR}"
+    scp_file_to_server "env.properties" "${MAPR_USER}" "${MAPR_HOST}" "${REMOTE_DIR}"
+    scp_file_to_server "jobs/resources/*.sh" "${MAPR_USER}" "${MAPR_HOST}" "${REMOTE_DIR}"
+    ssh_cmd "${MAPR_USER}" "${MAPR_HOST}" "cd ${REMOTE_DIR};mv jobs-v1.0.jar jobs.jar;tar -xvf jobs-tar-archive.tar"
+    ssh_cmd "${MAPR_USER}" "${MAPR_HOST}" "sudo -H -u mapr bash -c \"hadoop fs -mkdir -p /d5/apps/jobs; hadoop fs -rm -r -f -skipTrash /d5/apps/jobs/*;hadoop fs -put ${REMOTE_DIR}/* /d5/apps/jobs\""
 }
 
 function deploy_dcos(){
@@ -57,6 +64,7 @@ function deploy_dcos(){
     ssh core@35.156.121.150 "scp -i ~/.ssh/mesops_frankfurt.pem -r /d5/apps/jobs/* 10.0.6.247:/d5/apps/jobs/"
 }
 
+# not in use
 function deploy_dcos_1(){
 #    mvn_build
     exec "rm -rf /tmp/tmp_lib; mkdir -p /tmp/tmp_lib;cp ${BASEDIR}/jobs/target/jobs*.tar /tmp/tmp_lib;cd /tmp/tmp_lib;tar -xvf jobs-tar-archive.tar;"

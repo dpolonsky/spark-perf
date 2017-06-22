@@ -12,3 +12,11 @@
     dcos job remove job1dcos
     dcos job add jobs/resources/job1_dcos.json
     dcos job run job1dcos
+
+
+
+dcos installation on premise example
+https://github.com/jrx/terraform-ansible-dcos
+
+ssh to private ahent
+e.g. ssh -A -t core@35.156.121.150 ssh -A -t core@10.0.3.213

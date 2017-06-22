@@ -19,6 +19,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by danny.polonsky on 5/16/17.
+ *
+ * Mind that for spark 2.0.1 (dcos) the signature of call is different
+ * public Iterator<Integer> call(Iterator<String> bulk) throws Exception {
  */
 public class CSVMapper implements FlatMapFunction<Iterator<String>, Integer>, Serializable {
     private final Logger log = LoggerFactory.getLogger(CSVMapper.class);
@@ -47,6 +50,8 @@ public class CSVMapper implements FlatMapFunction<Iterator<String>, Integer>, Se
             }
             counter.getAndIncrement();
         });
+
+        // add writing HDFS
         log.info("Processed bulk of {} rows", counter);
         return Arrays.asList(counter.get()).iterator();
     }
