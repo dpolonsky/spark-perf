@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 INPUT=$1
+SPARK_MASTER_WEBUI_PORT=$2
 NAME="spark-perf-job1"
 LOG_FILE="/var/log/d5/${NAME}.log"
 
@@ -25,10 +26,12 @@ echo "EXEC_JARS:${EXEC_JARS}"
 
 MASTER="mapr1.5d.devops"
 #10.9.1.221
-${SPARK_HOME}bin/spark-submit --class com.d5.jobs.BatchJob1 \
+export SPARK_MASTER_WEBUI_PORT=${SPARK_MASTER_WEBUI_PORT}
+
+${SPARK_HOME}bin/spark-submit --class com.d5.jobs.BatchJob2 \
 --name ${NAME} \
---master mesos://${MASTER}:7077 \
---deploy-mode cluster \
+--master mesos://${MASTER}:5050 \
+--driver-memory 1G --executor-memory 3G --conf spark.cores.max=4 \
 --conf "spark.driver.extraJavaOptions=-Dlog4j.configuration=file:log4j.properties" \
 --conf "spark.driver.extraClassPath=${EXEC_JARS_COLON}" \
 --conf "spark.executor.extraJavaOptions=-Dlog4j.configuration=file:log4j.properties" \

@@ -1,0 +1,8 @@
+{
+  "service": {
+    "spark-history-server-url": "http://35.157.139.158/service/spark-history"
+  },
+  "hdfs": {
+    "config-url": "http://api.hdfs.marathon.l4lb.thisdcos.directory/v1/endpoints"
+  }
+}

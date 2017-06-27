@@ -27,9 +27,11 @@ import java.util.stream.IntStream;
  */
 public class BatchJobHDFS extends AbstractBaseSparkApplication {
     private static final Logger log = LoggerFactory.getLogger(BatchJobHDFS.class);
+    private UUID jobId;
 
     BatchJobHDFS(Config config) throws Exception {
         super(config);
+        jobId = new UUID();
     }
 
     public static void main(String[] args) throws Throwable {
@@ -44,7 +46,7 @@ public class BatchJobHDFS extends AbstractBaseSparkApplication {
             log.info("Got this inputPath:" + inputPath + " abd fsname:" + fsName);
 //            Path fullPath = new Path(fsName, inputPath);
 //            log.info("Got this input:" + fullPath.toString());
-            List<Integer> lines = sc.textFile(inputPath).mapPartitions(new CSVMapper(config, "jobHDFS")).collect();
+            List<Integer> lines = sc.textFile(inputPath).mapPartitions(new CSVMapper(config, jobId, "jobHDFS")).collect();
             int totalNumOfLines = lines.stream().mapToInt(Integer::intValue).sum();
             log.info("Processed {}, and we are done !", totalNumOfLines);
         } catch (ParseException e) {

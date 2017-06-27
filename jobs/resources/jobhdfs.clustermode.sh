@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 INPUT=$1
-NAME="spark-perf-job1"
+NAME="spark-perf-jobhdfs"
 LOG_FILE="/var/log/d5/${NAME}.log"
 
 LOG_JARS="jsonevent-layout-1.7.jar:json-smart-1.1.1.jar"
@@ -25,15 +25,16 @@ echo "EXEC_JARS:${EXEC_JARS}"
 
 MASTER="mapr1.5d.devops"
 #10.9.1.221
-${SPARK_HOME}bin/spark-submit --class com.d5.jobs.BatchJob1 \
+${SPARK_HOME}bin/spark-submit --class com.d5.jobs.BatchJobHDFS \
 --name ${NAME} \
 --master mesos://${MASTER}:7077 \
 --deploy-mode cluster \
+--driver-memory 1G --executor-memory 3G --conf spark.cores.max=5 \
 --conf "spark.driver.extraJavaOptions=-Dlog4j.configuration=file:log4j.properties" \
 --conf "spark.driver.extraClassPath=${EXEC_JARS_COLON}" \
 --conf "spark.executor.extraJavaOptions=-Dlog4j.configuration=file:log4j.properties" \
 --conf "spark.executor.extraClassPath=${EXEC_JARS_COLON}" \
---conf spark.eventLog.enabled=true --conf "spark.mesos.role=structured" \
+--conf spark.eventLog.enabled=true \
 --conf spark.mesos.uris=${APP_HDFS_BASE}/jobs-tar-archive.tar,${APP_HDFS_BASE}/log4j.properties \
 --jars ${EXEC_JARS} -v \
 ${APP_HDFS_BASE}/jobs.jar -i ${INPUT} 2>&1 | tee -a ${LOG_FILE}

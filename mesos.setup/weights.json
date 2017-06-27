@@ -1,0 +1,14 @@
+[
+  {
+    "role": "structured",
+    "weight": 6.0
+  },
+  {
+    "role": "similarity",
+    "weight": 3.0
+  },
+  {
+    "role": "patterns",
+    "weight": 1.0
+  }
+]

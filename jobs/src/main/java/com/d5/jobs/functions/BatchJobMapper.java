@@ -30,6 +30,7 @@ public class BatchJobMapper implements Function<String, Integer>, Serializable {
     @Override
     public Integer call(String input) throws Exception {
         boolean isExternal = config.getValue().getBoolean("batch." + jobName + ".task.stress.external");
+        log.info("job:" + jobName + ", is external:" + config.getValue().getBoolean("batch." + jobName + ".task.stress.external"));
         if ( isExternal){
             log.info("running external stress");
             return launchShellCommand();
