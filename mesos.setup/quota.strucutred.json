@@ -1,5 +1,6 @@
 {
   "role": "structured",
+  "principal": "structured-principal",
   "guarantee": [
     {
       "name": "cpus",
