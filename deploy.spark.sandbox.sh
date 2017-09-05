@@ -23,8 +23,8 @@ mvn_build(){
 }
 
 ssh_cmd() {
-    log "ssh -A -t ${1}@${2} ${3}"
-    ssh -A -t ${1}@${2} ${3}
+    log "ssh -t ${1}@${2} ${3}"
+    ssh -t ${1}@${2} ${3}
 }
 
 scp_file_to_server() {
@@ -49,8 +49,12 @@ function deploy_mapr(){
     scp_file_to_server "jobs/target/jobs*" "${MAPR_USER}" "${MAPR_HOST}" "${REMOTE_DIR}"
     scp_file_to_server "env.properties" "${MAPR_USER}" "${MAPR_HOST}" "${REMOTE_DIR}"
     scp_file_to_server "jobs/resources/*.sh" "${MAPR_USER}" "${MAPR_HOST}" "${REMOTE_DIR}"
+    scp_file_to_server "jobs/resources/yarn/*.sh" "${MAPR_USER}" "${MAPR_HOST}" "${REMOTE_DIR}"
     ssh_cmd "${MAPR_USER}" "${MAPR_HOST}" "cd ${REMOTE_DIR};mv jobs-v1.0.jar jobs.jar;tar -xvf jobs-tar-archive.tar"
-    ssh_cmd "${MAPR_USER}" "${MAPR_HOST}" "sudo -H -t -u mapr bash -c \"mkdir -p /mapr/mapr.d5.devops/d5/apps/jobs; rm -rf /mapr/mapr.d5.devops/d5/apps/jobs/*;cp -rf ${REMOTE_DIR}/* /mapr/mapr.d5.devops/d5/apps/jobs\""
+    ssh_cmd "${MAPR_USER}" "${MAPR_HOST}" "sudo -u mapr bash -c \"mkdir -p /mapr/mapr.d5.devops/d5/apps/jobs;\""
+    ssh_cmd "${MAPR_USER}" "${MAPR_HOST}" "sudo -u mapr bash -c \"rm -rf /mapr/mapr.d5.devops/d5/apps/jobs/*\""
+    ssh_cmd "${MAPR_USER}" "${MAPR_HOST}" "sudo -u mapr bash -c \"cp -rf ${REMOTE_DIR}/* /mapr/mapr.d5.devops/d5/apps/jobs\""
+#    ssh_cmd "${MAPR_USER}" "${MAPR_HOST}" "sudo -H -t -u mapr bash -c \"mkdir -p /mapr/mapr.d5.devops/d5/apps/jobs; rm -rf /mapr/mapr.d5.devops/d5/apps/jobs/*;cp -rf ${REMOTE_DIR}/* /mapr/mapr.d5.devops/d5/apps/jobs\""
 }
 
 function deploy_dcos(){

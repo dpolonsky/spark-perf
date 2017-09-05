@@ -23,7 +23,7 @@ import java.util.stream.IntStream;
 public class BatchJob3 extends AbstractBaseSparkApplication {
     private static final Logger log = LoggerFactory.getLogger(BatchJob3.class);
 
-    public BatchJob3(Config config) throws Exception {
+    BatchJob3(Config config) throws Exception {
         super(config);
     }
 
