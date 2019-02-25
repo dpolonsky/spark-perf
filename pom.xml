@@ -24,7 +24,7 @@
         <!-- Data Cluster 2.6.0-cdh5.9.0-->
         <hadoop.version>2.7.0-mapr-1602</hadoop.version>
         <mapr.core.version>5.2.0.39122-mapr</mapr.core.version>
-        <spark.version>2.0.1</spark.version>
+        <spark.version>2.2.0</spark.version>
         <!--<hadoop.version>2.6.0-cdh5.9.0</hadoop.version>-->
         <!--<spark.version>2.0.1</spark.version>-->
         <spark.csv.version>1.5.0</spark.csv.version>
